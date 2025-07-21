@@ -14,6 +14,10 @@ import TopLikedMedia from './components/mostlikedmedia.jsx';
 import TrendingPopularMedia from './components/trendingmedia.jsx';
 import Details from './components/detail.jsx';
 import Watchlist from './components/watchlist.jsx';
+import ReleasedMedia from './components/releasedmedia.jsx';
+import TopBoxOffice from './components/topboxoffice.jsx';
+
+
 import './App.css';
 
 function App() {
@@ -28,10 +32,12 @@ function App() {
               <HeroSection />
               <TopLikedMedia />
               <TrendingPopularMedia />
+             <TopBoxOffice/>
             </>
           }
         />
         <Route path="/upcoming" element={<UpcomingMedia />} />
+        <Route path="/released" element={<ReleasedMedia />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verifyotp" element={<VerifyOtp />} />
