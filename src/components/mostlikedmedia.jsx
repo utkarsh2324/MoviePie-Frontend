@@ -54,7 +54,7 @@ const TopLikedMedia = () => {
         toast.error('Please log in to add to your watchlist.');
         navigate('/login');
       } else {
-        toast.error(error.response?.data?.message || 'Failed to add to watchlist');
+        toast.error(error.response?.data?.message || 'Already exist in watchlist');
       }
     }
   };

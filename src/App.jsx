@@ -18,6 +18,7 @@ import ReleasedMedia from './components/releasedmedia.jsx';
 import TopBoxOffice from './components/topboxoffice.jsx';
 
 
+
 import './App.css';
 
 function App() {
@@ -32,7 +33,8 @@ function App() {
               <HeroSection />
               <TopLikedMedia />
               <TrendingPopularMedia />
-             <TopBoxOffice/>
+              <TopBoxOffice/>
+   
             </>
           }
         />
@@ -48,6 +50,7 @@ function App() {
         <Route path="/browseandbinge" element={<BrowseAndBinge />} />
         <Route path="/details/:id" element={<Details />} />
         <Route path="/watchlist" element={<Watchlist/>} />
+       
       </Routes>
     </>
   );

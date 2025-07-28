@@ -87,9 +87,7 @@ const addToWatchlist = async (item) => {
               )}
               <div className="p-3">
                 <h3 className="text-sm font-bold line-clamp-2">{item.title}</h3>
-                <p className="text-xs text-gray-400 mt-1">
-                  💰 {item.revenue ? item.revenue.toLocaleString() + ' USD' : 'N/A'} | {item.release_date || 'N/A'}
-                </p>
+                
                 <div className="flex gap-2 mt-3">
                   <Link
                     to={`/details/${item.id}?type=${mediaType}`}

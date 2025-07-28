@@ -30,6 +30,7 @@ export default function Navbar() {
     { name: 'Browse & Binge', href: '/browseandbinge' },
     { name: 'Watchlist', href: '/watchlist' },
     { name: 'Movie Recommender', href: '/movierecommender' },
+
   ];
 
   const handleProtectedRoute = (href, label) => {
