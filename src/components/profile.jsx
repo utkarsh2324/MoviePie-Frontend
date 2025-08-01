@@ -1,25 +1,13 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { FaUserEdit, FaImage, FaKey } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './auth'; // ✅ Use context
+import { FaUserEdit, FaImage, FaKey } from 'react-icons/fa';
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:8000/api/v1/users/current-user', { withCredentials: true })
-      .then(res => setUser(res.data.data))
-      .catch(err => {
-        console.error(err);
-        setError(err.response?.data?.message || 'Failed to load user');
-      });
-  }, []);
-
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
-  if (!user) return <div className="text-white text-center mt-10">Loading profile...</div>;
+  if (isLoading) return <div className="text-white text-center mt-10">Loading profile...</div>;
+  if (!user) return null; // or navigate('/login')
 
   return (
     <div className="min-h-[calc(100vh-4rem)] w-full overflow-hidden bg-gradient-to-br from-[#1c1c1c] via-[#111] to-[#0a0a0a] px-6 py-10 text-white">
@@ -69,7 +57,6 @@ export default function Profile() {
   );
 }
 
-// ✅ Now just use the onClick passed from props
 function ActionCard({ icon, title, desc, onClick }) {
   return (
     <div

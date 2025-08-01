@@ -2,12 +2,14 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useAuth } from './auth'; // ⬅️ import useAuth
 
 export default function ChangeUsername() {
   const [userName, setUserName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { refreshUser } = useAuth(); // ⬅️ use the refresh function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +27,8 @@ export default function ChangeUsername() {
         { userName },
         { withCredentials: true }
       );
+
+      await refreshUser(); // ✅ Refresh context after update
 
       toast.success('Username updated successfully!');
       navigate('/profile');
