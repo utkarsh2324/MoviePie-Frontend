@@ -79,9 +79,9 @@ export default function Login() {
 
           {/* Link section */}
           <div className="flex justify-between items-center mb-6 text-sm">
-            <a href="#" className="text-gray-400 hover:underline">
-              Forgot Password?
-            </a>
+          <Link to="/forgot-password" className="text-gray-400 hover:underline">
+  Forgot Password?
+</Link>
             <Link
   to="/signup"
   className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-full font-medium text-xs shadow-md hover:scale-105 transition"
@@ -92,7 +92,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-600 hover:to-purple-600 rounded-lg transition duration-300 text-white font-semibold shadow-md hover:scale-105"
+            className="cursor-pointer w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-600 hover:to-purple-600 rounded-lg transition duration-300 text-white font-semibold shadow-md hover:scale-105"
           >
             Login
           </button>

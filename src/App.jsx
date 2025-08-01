@@ -16,8 +16,9 @@ import Details from './components/detail.jsx';
 import Watchlist from './components/watchlist.jsx';
 import ReleasedMedia from './components/releasedmedia.jsx';
 import TopBoxOffice from './components/topboxoffice.jsx';
-
-
+import ForgotPassword from './components/forgotpassword.jsx';
+import ResetPassword from './components/resetpassword.jsx';
+import VerifyOTP from './components/verify-otp.jsx';
 
 import './App.css';
 
@@ -50,6 +51,10 @@ function App() {
         <Route path="/browseandbinge" element={<BrowseAndBinge />} />
         <Route path="/details/:id" element={<Details />} />
         <Route path="/watchlist" element={<Watchlist/>} />
+
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/verify-otp" element={<VerifyOTP />} />
+<Route path="/reset-password" element={<ResetPassword />} />
        
       </Routes>
     </>
