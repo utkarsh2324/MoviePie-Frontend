@@ -29,7 +29,7 @@ export default function Navbar() {
   const navigation = [
     { name: 'Browse & Binge', href: '/browseandbinge' },
     { name: 'Watchlist', href: '/watchlist' },
-    { name: 'Movie Recommender', href: '/movierecommender' },
+    { name: 'CineQuery', href: '/movie-bot' },
 
   ];
 

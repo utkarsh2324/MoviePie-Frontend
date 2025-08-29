@@ -19,6 +19,7 @@ import TopBoxOffice from './components/topboxoffice.jsx';
 import ForgotPassword from './components/forgotpassword.jsx';
 import ResetPassword from './components/resetpassword.jsx';
 import VerifyOTP from './components/verify-otp.jsx';
+import MovieBot from './components/moviebot.jsx';
 
 import './App.css';
 
@@ -51,6 +52,8 @@ function App() {
         <Route path="/browseandbinge" element={<BrowseAndBinge />} />
         <Route path="/details/:id" element={<Details />} />
         <Route path="/watchlist" element={<Watchlist/>} />
+        <Route path="/movie-bot" element={<MovieBot/>} />
+        
 
 <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/verify-otp" element={<VerifyOTP />} />
@@ -59,6 +62,6 @@ function App() {
       </Routes>
     </>
   );
-}
+}  
 
 export default App;
