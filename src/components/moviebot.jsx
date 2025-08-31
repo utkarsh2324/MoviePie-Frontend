@@ -2,20 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-// NOTE: This import path is the source of the recurring error.
-// This path assumes your 'auth.jsx' file is in the same 'src/components/' directory
-// as this 'MovieBot.jsx' file. Please verify this path matches your project's structure.
+
 import { useAuth } from './auth';
 
-// --- Helper Functions & Constants ---
-// Switched back to environment variables for security.
 const TMDB_API_key = import.meta.env.VITE_TMDB_API_KEY;
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GEMINI_API_KEY}`;
 const TMDB_API_URL = 'https://api.themoviedb.org/3';
 
-// --- SVG Icons ---
+
 const SendIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white h-5 w-5 sm:h-6 sm:w-6">
         <path d="M22 2L11 13" /><path d="M22 2L15 22L11 13L2 9L22 2Z" />

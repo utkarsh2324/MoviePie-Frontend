@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { AiOutlineEye } from 'react-icons/ai';
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch watchlist
   const fetchWatchlist = async () => {
     try {
       const res = await axios.get('http://localhost:8000/api/v1/playlist/watchlist', {
         withCredentials: true,
       });
-
       setWatchlist(res.data.data || []);
     } catch (err) {
       console.error('Failed to fetch watchlist:', err);
@@ -25,16 +26,48 @@ const Watchlist = () => {
     fetchWatchlist();
   }, []);
 
+  // Remove from watchlist
   const handleRemove = async (movieId, title) => {
     try {
       await axios.delete(`http://localhost:8000/api/v1/playlist/watchlist/${movieId}`, {
         withCredentials: true,
       });
-
       toast.success(`Removed "${title}" from watchlist!`);
       setWatchlist((prev) => prev.filter((item) => item.movieId !== movieId));
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to remove from watchlist');
+    }
+  };
+
+  // Mark as watched and remove from watchlist
+  const handleAddToWatched = async (item) => {
+    try {
+      await axios.post(
+        'http://localhost:8000/api/watched/add',
+        {
+          movieId: item.movieId,
+          title: item.title,
+          posterPath: item.posterPath,
+          releaseDate: item.releaseDate,
+          mediaType: item.mediaType,
+        },
+        { withCredentials: true }
+      );
+
+      toast.success(`Marked "${item.title}" as watched! ✅`);
+
+      await axios.delete(`http://localhost:8000/api/v1/playlist/watchlist/${item.movieId}`, {
+        withCredentials: true,
+      });
+
+      setWatchlist((prev) => prev.filter((i) => i.movieId !== item.movieId));
+    } catch (err) {
+      if (err.response?.status === 409) {
+        toast('Already in watched, removed from watchlist');
+        setWatchlist((prev) => prev.filter((i) => i.movieId !== item.movieId));
+      } else {
+        toast.error(err.response?.data?.message || 'Failed to mark as watched');
+      }
     }
   };
 
@@ -56,7 +89,7 @@ const Watchlist = () => {
               return (
                 <div
                   key={item._id}
-                  className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300"
+                  className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300 relative group"
                 >
                   {item.posterPath ? (
                     <img
@@ -69,11 +102,23 @@ const Watchlist = () => {
                       No Image
                     </div>
                   )}
+
+                  {/* ✅ Eye overlay icon */}
+                  <div
+                    onClick={() => handleAddToWatched(item)}
+                    className="absolute top-2 right-2 bg-purple-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-purple-600/90 shadow-lg"
+                    title="Mark as watched"
+                  >
+                    <AiOutlineEye size={18} />
+                  </div>
+
                   <div className="p-3">
                     <h3 className="text-sm font-bold line-clamp-2">{title}</h3>
                     <p className="text-xs text-gray-400 mt-1">
                       Release: {item.releaseDate || 'N/A'}
                     </p>
+
+                    {/* Original buttons side by side */}
                     <div className="flex gap-2 mt-3">
                       <Link
                         to={`/details/${item.movieId}?type=${item.mediaType}`}
@@ -81,6 +126,7 @@ const Watchlist = () => {
                       >
                         Details
                       </Link>
+
                       <button
                         onClick={() => handleRemove(item.movieId, title)}
                         className="cursor-pointer flex-1 bg-purple-700 text-white text-xs font-semibold py-1.5 rounded hover:bg-purple-600 transition"

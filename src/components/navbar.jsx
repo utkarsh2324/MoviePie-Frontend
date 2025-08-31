@@ -30,7 +30,8 @@ export default function Navbar() {
     { name: 'Browse & Binge', href: '/browseandbinge' },
     { name: 'Watchlist', href: '/watchlist' },
     { name: 'CineQuery', href: '/movie-bot' },
-
+    { name: 'Watched', href: '/watched' },
+    { name: 'Dashboard', href: '/movie-bot' },
   ];
 
   const handleProtectedRoute = (href, label) => {
@@ -123,12 +124,7 @@ export default function Navbar() {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {isLoading ? null : user ? (
               <>
-                <button
-                  type="button"
-                  className="relative rounded-full p-1 text-gray-400 hover:text-white transition hover:scale-110"
-                >
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+               
                 <Menu as="div" className="relative ml-4">
                   <div>
                     <MenuButton className="relative flex rounded-full ring-2 ring-purple-500 hover:ring-pink-500 transition duration-300 focus:outline-none focus:ring-0 cursor-pointer">

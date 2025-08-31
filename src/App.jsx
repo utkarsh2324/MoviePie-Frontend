@@ -20,7 +20,7 @@ import ForgotPassword from './components/forgotpassword.jsx';
 import ResetPassword from './components/resetpassword.jsx';
 import VerifyOTP from './components/verify-otp.jsx';
 import MovieBot from './components/moviebot.jsx';
-
+import Watched from './components/watched.jsx';
 import './App.css';
 
 function App() {
@@ -53,6 +53,7 @@ function App() {
         <Route path="/details/:id" element={<Details />} />
         <Route path="/watchlist" element={<Watchlist/>} />
         <Route path="/movie-bot" element={<MovieBot/>} />
+        <Route path="/watched" element={<Watched/>} />
         
 
 <Route path="/forgot-password" element={<ForgotPassword />} />
