@@ -21,6 +21,7 @@ import ResetPassword from './components/resetpassword.jsx';
 import VerifyOTP from './components/verify-otp.jsx';
 import MovieBot from './components/moviebot.jsx';
 import Watched from './components/watched.jsx';
+import Footer from './components/footer.jsx';
 import './App.css';
 
 function App() {
@@ -55,12 +56,14 @@ function App() {
         <Route path="/movie-bot" element={<MovieBot/>} />
         <Route path="/watched" element={<Watched/>} />
         
+        
 
 <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/verify-otp" element={<VerifyOTP />} />
 <Route path="/reset-password" element={<ResetPassword />} />
        
       </Routes>
+      <Footer/>
     </>
   );
 }  

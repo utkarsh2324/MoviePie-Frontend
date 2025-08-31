@@ -50,6 +50,7 @@ const Watchlist = () => {
           posterPath: item.posterPath,
           releaseDate: item.releaseDate,
           mediaType: item.mediaType,
+          genres: item.genres || [], 
         },
         { withCredentials: true }
       );

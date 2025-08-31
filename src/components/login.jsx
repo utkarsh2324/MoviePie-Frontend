@@ -35,10 +35,10 @@ export default function Login() {
             Log in to continue browsing and bingeing your favorite titles.
           </p>
           <img
-            src="https://media.giphy.com/media/3o7abB06u9bNzA8lu8/giphy.gif"
-            alt="Welcome"
-            className="w-60 h-40 object-contain rounded-lg"
-          />
+  src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
+  alt="Popcorn Time"
+  className="w-60 h-40 object-contain rounded-lg"
+/>
         </div>
 
         {/* Right Side - Login Form */}

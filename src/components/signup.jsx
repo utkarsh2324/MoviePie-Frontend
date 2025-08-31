@@ -66,7 +66,7 @@ export default function Signup() {
             Join MoviePie!
           </h2>
           <p className="text-gray-400 mb-4 text-center">
-            Create your account to explore and recommend amazing movies.
+          Create your account to explore and get personalized movie recommendations.
           </p>
           <img
             src="https://media.giphy.com/media/QBd2kLB5qDmysEXre9/giphy.gif"
