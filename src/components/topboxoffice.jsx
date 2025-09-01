@@ -11,11 +11,11 @@ const TopBoxOffice = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
   const navigate = useNavigate();
-
+  const API=import.meta.env.VITE_BACKEND_URL;
 const addToWatchlist = async (item) => {
   try {
     const res = await axios.post(
-      'http://localhost:8000/api/v1/playlist/watchlist',
+      `${API}playlist/watchlist`,
       {
         movieId: item.id,
         title: item.title,

@@ -7,12 +7,12 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleRequestOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8000/api/v1/users/forgotPassword-otp', { email });
+      await axios.post(`${API}users/forgotPassword-otp`, { email });
       toast.success('OTP sent to your email!');
       navigate('/verify-otp', { state: { email } });
     } catch (err) {

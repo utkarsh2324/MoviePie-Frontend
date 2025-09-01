@@ -10,7 +10,7 @@ export default function ChangeUsername() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { refreshUser } = useAuth(); // ⬅️ use the refresh function
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -23,7 +23,7 @@ export default function ChangeUsername() {
     setLoading(true);
     try {
       await axios.patch(
-        'http://localhost:8000/api/v1/users/update-account',
+       `${API}users/update-account`,
         { userName },
         { withCredentials: true }
       );

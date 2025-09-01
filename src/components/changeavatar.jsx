@@ -11,7 +11,7 @@ export default function ChangeAvatar() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { refreshUser } = useAuth(); // ✅ so navbar updates
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setAvatar(file);
@@ -33,7 +33,7 @@ export default function ChangeAvatar() {
     formData.append('avatar', avatar);
 
     try {
-      await axios.patch('http://localhost:8000/api/v1/users/avatar', formData, {
+      await axios.patch(`${API}avatar`, formData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

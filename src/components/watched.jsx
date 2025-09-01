@@ -4,10 +4,10 @@ import axios from 'axios';
 const Watched = () => {
   const [watched, setWatched] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const fetchWatched = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/watched', {
+      const res = await axios.get(`${API}watched`, {
         withCredentials: true,
       });
 

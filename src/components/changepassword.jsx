@@ -9,7 +9,7 @@ export default function ChangePassword() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -22,7 +22,7 @@ export default function ChangePassword() {
     setLoading(true);
     try {
       await axios.post(
-        'http://localhost:8000/api/v1/users/change-password',
+        `${API}users/change-password`,
         { oldPassword, newPassword },
         { withCredentials: true }
       );

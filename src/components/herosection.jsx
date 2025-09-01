@@ -123,14 +123,7 @@ const HeroSection = () => {
           <p className="mt-2 sm:mt-4 text-sm sm:text-base md:text-lg max-w-xl text-gray-200 line-clamp-3">
             {current.overview}
           </p>
-          <div className="mt-4 flex gap-4">
-            <button className="bg-white text-black font-bold py-2 px-5 rounded hover:bg-gray-200 transition text-sm sm:text-base">
-              ▶ Play
-            </button>
-            <button className="bg-gray-700 bg-opacity-70 text-white font-semibold py-2 px-5 rounded hover:bg-opacity-90 transition text-sm sm:text-base">
-              + My List
-            </button>
-          </div>
+
         </div>
       )}
     </section>

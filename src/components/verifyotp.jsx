@@ -8,14 +8,14 @@ export default function VerifyOtp() {
 
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleOtpVerify = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
       const res = await axios.post(
-        'http://localhost:8000/api/v1/users/verify-otp', // ✅ Direct route
+        `${API}users/verify-otp`, // ✅ Direct route
         {
           email: state?.email,
           otp,

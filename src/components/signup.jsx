@@ -15,7 +15,7 @@ export default function Signup() {
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleChange = (e) => {
     if (e.target.name === 'avatar') {
       const file = e.target.files[0];
@@ -41,7 +41,7 @@ export default function Signup() {
       payload.append('avatar', formData.avatar);
 
       const res = await axios.post(
-        'http://localhost:8000/api/v1/users/register',
+        `${API}users/register`,
         payload,
         { withCredentials: true }
       );
@@ -88,7 +88,7 @@ export default function Signup() {
           )}
 
           <div className="mb-4">
-            <label className="block mb-2 text-sm text-gray-300">Email</label>
+            <label className="block mb-2 text-sm text-gray-300">Email *</label>
             <input
               type="email"
               name="email"
@@ -100,7 +100,7 @@ export default function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2 text-sm text-gray-300">Username</label>
+            <label className="block mb-2 text-sm text-gray-300">Username *</label>
             <input
               type="text"
               name="userName"
@@ -112,7 +112,7 @@ export default function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2 text-sm text-gray-300">Password</label>
+            <label className="block mb-2 text-sm text-gray-300">Password *</label>
             <input
               type="password"
               name="password"
@@ -124,7 +124,7 @@ export default function Signup() {
           </div>
 
           <div className="mb-6">
-            <label className="block mb-2 text-sm text-gray-300">Upload Avatar</label>
+            <label className="block mb-2 text-sm text-gray-300">Upload Avatar *</label>
 
             {/* Styled Upload Box */}
             <div

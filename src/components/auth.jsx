@@ -9,12 +9,12 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const API = import.meta.env.VITE_BACKEND_URL;
   // Fetch current user on mount
   const fetchUser = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:8000/api/v1/users/current-user'
+        `${API}users/current-user`
       );
       setUser(data.data); // Assuming backend returns { data: { userObject } }
     } catch (err) {
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await axios.post(
-      'http://localhost:8000/api/v1/users/login',
+      `${API}users/login`,
       { email, password }
     );
     setUser(data.data.user);
@@ -38,14 +38,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post('http://localhost:8000/api/v1/users/logout');
+    await axios.post(`${API}users/logout`);
     setUser(null);
   };
 
   const refreshUser = async () => {
     try {
       const { data } = await axios.get(
-        'http://localhost:8000/api/v1/users/current-user'
+        `http://localhost:8000/api/v1/users/current-user`
       );
       setUser(data.data);
     } catch (err) {

@@ -24,7 +24,7 @@ const ReleasedMedia = () => {
   twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
   const pastDate = twoMonthsAgo.toISOString().split('T')[0];
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const fetchReleased = async () => {
       try {
@@ -61,7 +61,7 @@ const ReleasedMedia = () => {
   const addToWatchlist = async (item) => {
     try {
       await axios.post(
-        'http://localhost:8000/api/v1/playlist/watchlist',
+        `${API}playlist/watchlist`,
         {
           movieId: item.id,
           title: item.title || item.name,

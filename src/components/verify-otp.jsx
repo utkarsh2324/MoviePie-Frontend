@@ -8,11 +8,11 @@ export default function VerifyOTP() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState('');
   const email = state?.email || '';
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/api/v1/users/resetverify-otp', { email, otp });
+      await axios.post(`${API}users/resetverify-otp`, { email, otp });
       toast.success('OTP verified!');
       navigate('/reset-password', { state: { email } });
     } catch (err) {

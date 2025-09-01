@@ -11,7 +11,7 @@ const TrendingMedia = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   // Resize listener
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
@@ -42,7 +42,7 @@ const TrendingMedia = () => {
   const addToWatchlist = async (item) => {
     try {
       const res = await axios.post(
-        'http://localhost:8000/api/v1/playlist/watchlist',
+        `${API}playlist/watchlist`,
         {
           movieId: item.id,
           title: item.title || item.name,

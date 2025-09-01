@@ -7,11 +7,11 @@ import { AiOutlineEye } from 'react-icons/ai';
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   // Fetch watchlist
   const fetchWatchlist = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/v1/playlist/watchlist', {
+      const res = await axios.get(`${API}playlist/watchlist`, {
         withCredentials: true,
       });
       setWatchlist(res.data.data || []);
@@ -29,7 +29,7 @@ const Watchlist = () => {
   // Remove from watchlist
   const handleRemove = async (movieId, title) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/playlist/watchlist/${movieId}`, {
+      await axios.delete(`${API}playlist/watchlist/${movieId}`, {
         withCredentials: true,
       });
       toast.success(`Removed "${title}" from watchlist!`);
@@ -43,7 +43,7 @@ const Watchlist = () => {
   const handleAddToWatched = async (item) => {
     try {
       await axios.post(
-        'http://localhost:8000/api/watched/add',
+        `${API}watched/add`,
         {
           movieId: item.movieId,
           title: item.title,
@@ -57,7 +57,7 @@ const Watchlist = () => {
 
       toast.success(`Marked "${item.title}" as watched! ✅`);
 
-      await axios.delete(`http://localhost:8000/api/v1/playlist/watchlist/${item.movieId}`, {
+      await axios.delete(`${API}playlist/watchlist/${item.movieId}`, {
         withCredentials: true,
       });
 

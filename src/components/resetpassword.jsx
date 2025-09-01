@@ -8,11 +8,11 @@ export default function ResetPassword() {
   const navigate = useNavigate();
   const email = state?.email || '';
   const [newPassword, setNewPassword] = useState('');
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/api/v1/users/resetpassword', {
+      await axios.post(`${API}users/resetpassword`, {
         email,
         newPassword,
       });

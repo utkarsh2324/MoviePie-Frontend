@@ -20,7 +20,7 @@ const languageOptions = [
 const BrowseAndBinge = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
-
+  const API=import.meta.env.VITE_BACKEND_URL;
   const [mediaType, setMediaType] = useState('movie');
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
@@ -100,7 +100,7 @@ const BrowseAndBinge = () => {
   const addToWatchlist = async (item) => {
     try {
       await axios.post(
-        'http://localhost:8000/api/v1/playlist/watchlist',
+        `${API}playlist/watchlist`,
         {
           movieId: item.id,
           title: item.title || item.name,
