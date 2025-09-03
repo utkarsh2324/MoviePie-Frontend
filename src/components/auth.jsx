@@ -1,6 +1,7 @@
 // src/context/authcontext.js
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { AppleIcon } from 'lucide-react';
 
 axios.defaults.withCredentials = true;
 
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   const refreshUser = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:8000/api/v1/users/current-user`
+        `${API}users/current-user`
       );
       setUser(data.data);
     } catch (err) {
