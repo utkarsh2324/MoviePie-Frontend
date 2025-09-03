@@ -151,9 +151,10 @@ export default function MovieBot() {
 
     const addToWatchlist = async (item) => {
         const mediaType = item.name ? 'tv' : 'movie';
+        const API=import.meta.env.VITE_BACKEND_URL;
         try {
           await axios.post(
-            'http://localhost:8000/api/v1/playlist/watchlist',
+            `${API}playlist/watchlist`,
             {
               movieId: item.id,
               title: item.title || item.name,
