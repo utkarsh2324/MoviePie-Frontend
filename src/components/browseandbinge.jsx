@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from './auth'; 
+import { AiOutlineEye } from 'react-icons/ai';
 
 const languageOptions = [
   { code: 'en', name: 'English' },
@@ -20,7 +21,9 @@ const languageOptions = [
 const BrowseAndBinge = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
-  const API=import.meta.env.VITE_BACKEND_URL;
+  const API = import.meta.env.VITE_BACKEND_URL;
+  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+
   const [mediaType, setMediaType] = useState('movie');
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
@@ -32,20 +35,17 @@ const BrowseAndBinge = () => {
   const [error, setError] = useState('');
   const [genreLoading, setGenreLoading] = useState(false);
 
-  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate('/login');
-    }
+    if (!isLoading && !user) navigate('/login');
   }, [user, isLoading, navigate]);
 
   useEffect(() => {
     const fetchGenres = async () => {
       try {
         setGenreLoading(true);
-        const url = `https://api.themoviedb.org/3/genre/${mediaType}/list?api_key=${apiKey}&language=en-US`;
-        const res = await fetch(url);
+        const res = await fetch(
+          `https://api.themoviedb.org/3/genre/${mediaType}/list?api_key=${apiKey}&language=en-US`
+        );
         const data = await res.json();
         setGenres(data.genres || []);
         setSelectedGenre('');
@@ -56,7 +56,6 @@ const BrowseAndBinge = () => {
         setGenreLoading(false);
       }
     };
-
     fetchGenres();
   }, [mediaType]);
 
@@ -65,7 +64,6 @@ const BrowseAndBinge = () => {
       setError('Please select both Genre and Year.');
       return;
     }
-
     try {
       const params = new URLSearchParams({
         api_key: apiKey,
@@ -73,16 +71,9 @@ const BrowseAndBinge = () => {
         page,
         with_genres: selectedGenre,
       });
-
-      if (language) {
-        params.append('with_original_language', language);
-      }
-
-      if (mediaType === 'movie') {
-        params.append('primary_release_year', year);
-      } else {
-        params.append('first_air_date_year', year);
-      }
+      if (language) params.append('with_original_language', language);
+      if (mediaType === 'movie') params.append('primary_release_year', year);
+      else params.append('first_air_date_year', year);
 
       const res = await fetch(
         `https://api.themoviedb.org/3/discover/${mediaType}?${params}`
@@ -111,13 +102,36 @@ const BrowseAndBinge = () => {
         { withCredentials: true }
       );
       toast.success(`"${item.title || item.name}" added to watchlist!`);
-    } catch (error) {
-      if (error.response?.status === 401) {
+    } catch (err) {
+      if (err.response?.status === 401) {
         toast.error('Please log in to add to your watchlist.');
         navigate('/login');
       } else {
-        toast.error(error.response?.data?.message || 'Failed to add to watchlist');
+        toast.error(err.response?.data?.message || 'Failed to add to watchlist');
       }
+    }
+  };
+
+  const addToWatched = async (item) => {
+    try {
+      await axios.post(
+        `${API}watched/add`,
+        {
+          movieId: item.id,
+          title: item.title || item.name,
+          posterPath: item.poster_path,
+          releaseDate: item.release_date || item.first_air_date,
+          mediaType,
+          genres: item.genre_ids || [],
+        },
+        { withCredentials: true }
+      );
+      toast.success(`Marked "${item.title || item.name}" as watched! ✅`);
+      // Optionally remove from watchlist if exists
+      await axios.delete(`${API}playlist/watchlist/${item.id}`, { withCredentials: true }).catch(() => {});
+    } catch (err) {
+      if (err.response?.status === 409) toast('Already in watched!');
+      else toast.error(err.response?.data?.message || 'Failed to mark as watched');
     }
   };
 
@@ -125,9 +139,7 @@ const BrowseAndBinge = () => {
     if (page !== 1) fetchMedia();
   }, [page]);
 
-  if (isLoading) {
-    return <div className="text-white text-center mt-10">Loading...</div>;
-  }
+  if (isLoading) return <div className="text-white text-center mt-10">Loading...</div>;
 
   return (
     <div className="bg-black text-white min-h-screen py-10 px-4 sm:px-6 lg:px-10">
@@ -164,9 +176,7 @@ const BrowseAndBinge = () => {
             <>
               <option value="">Select Genre</option>
               {genres.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.name}
-                </option>
+                <option key={g.id} value={g.id}>{g.name}</option>
               ))}
             </>
           )}
@@ -187,30 +197,22 @@ const BrowseAndBinge = () => {
         >
           <option value="">All Languages</option>
           {languageOptions.map((lang) => (
-            <option key={lang.code} value={lang.code}>
-              {lang.name}
-            </option>
+            <option key={lang.code} value={lang.code}>{lang.name}</option>
           ))}
         </select>
 
         <button
-          onClick={() => {
-            setPage(1);
-            fetchMedia();
-          }}
+          onClick={() => { setPage(1); fetchMedia(); }}
           className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition cursor-pointer"
         >
           Search
         </button>
       </div>
 
-      {/* Cards */}
+      {/* Media Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {mediaList.map((item) => (
-          <div
-            key={item.id}
-            className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300"
-          >
+          <div key={item.id} className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300 relative group">
             {item.poster_path ? (
               <div className="w-full aspect-[2/3] bg-gray-700">
                 <img
@@ -224,13 +226,19 @@ const BrowseAndBinge = () => {
                 No Image
               </div>
             )}
+
+            {/* Eye icon for watched */}
+            <div
+              onClick={() => addToWatched(item)}
+              className="absolute top-2 right-2 bg-purple-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-purple-600/90 shadow-lg"
+              title="Mark as watched"
+            >
+              <AiOutlineEye size={18} />
+            </div>
+
             <div className="p-4">
-              <h3 className="text-sm font-bold line-clamp-2">
-                {item.title || item.name}
-              </h3>
-              <p className="text-xs text-gray-400 mt-1">
-                {item.release_date || item.first_air_date || 'Unknown Date'}
-              </p>
+              <h3 className="text-sm font-bold line-clamp-2">{item.title || item.name}</h3>
+              <p className="text-xs text-gray-400 mt-1">{item.release_date || item.first_air_date || 'Unknown Date'}</p>
               <div className="flex gap-2 mt-3">
                 <Link
                   to={`/details/${item.id}?type=${mediaType}`}

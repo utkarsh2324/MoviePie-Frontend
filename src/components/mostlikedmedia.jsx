@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { AiOutlineEye } from 'react-icons/ai';
 
 const TopLikedMedia = () => {
   const [mediaType, setMediaType] = useState('movie');
@@ -11,13 +12,16 @@ const TopLikedMedia = () => {
   const navigate = useNavigate();
   const itemsPerPage = 5;
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-  const API=import.meta.env.VITE_BACKEND_URL;
+  const API = import.meta.env.VITE_BACKEND_URL;
+
+  // Resize listener
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Fetch top liked media
   useEffect(() => {
     const fetchTopMedia = async () => {
       try {
@@ -31,10 +35,10 @@ const TopLikedMedia = () => {
         setMedia([]);
       }
     };
-
     fetchTopMedia();
   }, [mediaType]);
 
+  // Add to watchlist
   const addToWatchlist = async (item) => {
     try {
       await axios.post(
@@ -54,7 +58,35 @@ const TopLikedMedia = () => {
         toast.error('Please log in to add to your watchlist.');
         navigate('/login');
       } else {
-        toast.error(error.response?.data?.message || 'Already exist in watchlist');
+        toast.error(error.response?.data?.message || 'Already exists in watchlist');
+      }
+    }
+  };
+
+  // Mark as watched
+  const addToWatched = async (item) => {
+    try {
+      await axios.post(
+        `${API}watched/add`,
+        {
+          movieId: item.id,
+          title: item.title || item.name,
+          posterPath: item.poster_path,
+          releaseDate: item.release_date || item.first_air_date,
+          mediaType,
+          genres: item.genre_ids || [],
+        },
+        { withCredentials: true }
+      );
+      toast.success(`Marked "${item.title || item.name}" as watched! ✅`);
+
+      // Optionally remove from watchlist if exists
+      await axios.delete(`${API}playlist/watchlist/${item.id}`, { withCredentials: true }).catch(() => {});
+    } catch (err) {
+      if (err.response?.status === 409) {
+        toast('Already in watched!');
+      } else {
+        toast.error(err.response?.data?.message || 'Failed to mark as watched');
       }
     }
   };
@@ -102,7 +134,7 @@ const TopLikedMedia = () => {
           {currentItems.map((item) => (
             <div
               key={item.id}
-              className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300"
+              className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300 relative group"
             >
               {item.poster_path ? (
                 <img
@@ -115,10 +147,18 @@ const TopLikedMedia = () => {
                   No Image
                 </div>
               )}
+
+              {/* Eye icon */}
+              <div
+                onClick={() => addToWatched(item)}
+                className="absolute top-2 right-2 bg-purple-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-purple-600/90 shadow-lg"
+                title="Mark as watched"
+              >
+                <AiOutlineEye size={18} />
+              </div>
+
               <div className="p-3">
-                <h3 className="text-sm font-bold line-clamp-2">
-                  {item.title || item.name}
-                </h3>
+                <h3 className="text-sm font-bold line-clamp-2">{item.title || item.name}</h3>
                 <p className="text-xs text-gray-400 mt-1">
                   ⭐ {item.vote_average} | {item.release_date || item.first_air_date || 'N/A'}
                 </p>
