@@ -39,7 +39,7 @@ const StarIcon = () => (
 export default function MovieBot() {
     const { user, isLoading: isAuthLoading } = useAuth();
     const navigate = useNavigate();
-    
+    const API=import.meta.env.VITE_BACKEND_URL;
     const [messages, setMessages] = useState([{ type: 'bot', text: "Hello! Tell me your mood or a genre you like, and I'll recommend something for you to watch." }]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
