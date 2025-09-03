@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { AiOutlineEye } from 'react-icons/ai';
 
 const TopBoxOffice = () => {
   const [mediaType] = useState('movie'); // only 'movie' supports revenue
@@ -11,30 +11,61 @@ const TopBoxOffice = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
   const navigate = useNavigate();
-  const API=import.meta.env.VITE_BACKEND_URL;
-const addToWatchlist = async (item) => {
-  try {
-    const res = await axios.post(
-      `${API}playlist/watchlist`,
-      {
-        movieId: item.id,
-        title: item.title,
-        posterPath: item.poster_path,
-        releaseDate: item.release_date,
-        mediaType: 'movie',
-      },
-      { withCredentials: true }
-    );
-    toast.success(`"${item.title}" added to watchlist!`);
-  } catch (error) {
-    if (error.response?.status === 401) {
-      toast.error('Please log in to add to your watchlist.');
-      navigate('/login');
-    } else {
-      toast.error(error.response?.data?.message || 'Already exist in watchlist');
+  const API = import.meta.env.VITE_BACKEND_URL;
+
+  // Add movie to watchlist
+  const addToWatchlist = async (item) => {
+    try {
+      await axios.post(
+        `${API}playlist/watchlist`,
+        {
+          movieId: item.id,
+          title: item.title,
+          posterPath: item.poster_path,
+          releaseDate: item.release_date,
+          mediaType: 'movie',
+        },
+        { withCredentials: true }
+      );
+      toast.success(`"${item.title}" added to watchlist!`);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error('Please log in to add to your watchlist.');
+        navigate('/login');
+      } else {
+        toast.error(error.response?.data?.message || 'Already exists in watchlist');
+      }
     }
-  }
-};
+  };
+
+  // Mark as watched
+  const addToWatched = async (item) => {
+    try {
+      await axios.post(
+        `${API}watched/add`,
+        {
+          movieId: item.id,
+          title: item.title,
+          posterPath: item.poster_path,
+          releaseDate: item.release_date,
+          mediaType: 'movie',
+          genres: item.genre_ids || [],
+        },
+        { withCredentials: true }
+      );
+
+      toast.success(`Marked "${item.title}" as watched! ✅`);
+
+      // Optionally remove from watchlist
+      await axios.delete(`${API}playlist/watchlist/${item.id}`, { withCredentials: true }).catch(() => {});
+    } catch (err) {
+      if (err.response?.status === 409) {
+        toast('Already in watched!');
+      } else {
+        toast.error(err.response?.data?.message || 'Failed to mark as watched');
+      }
+    }
+  };
 
   // Update screen size on resize
   useEffect(() => {
@@ -51,8 +82,9 @@ const addToWatchlist = async (item) => {
           `https://api.themoviedb.org/3/discover/${mediaType}?api_key=${apiKey}&sort_by=revenue.desc&page=1`
         );
         const data = await res.json();
-        setList(data.results); // Keep full result set for dynamic pagination
+        setList(data.results);
       } catch (error) {
+        console.error('Failed to fetch top box office movies:', error);
         setList([]);
       }
     };
@@ -65,15 +97,15 @@ const addToWatchlist = async (item) => {
   const displayed = list.slice((page - 1) * perPage, page * perPage);
 
   return (
-    <div className="bg-black text-white py-10 px-4 sm:px-6 lg:px-10 w-full">
+    <div className="bg-black text-white py-10 px-4 sm:px-6 lg:px-10 w-full min-h-screen">
       <div className="max-w-7xl mx-auto w-full">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold text-purple-500">Top Box Office Movies</h2>
-        </div>
+        <h2 className="text-3xl font-bold text-purple-500 mb-6">Top Box Office Movies</h2>
 
         <div className={`grid grid-cols-2 ${!isSmall ? 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5' : ''} gap-4 sm:gap-6`}>
           {displayed.map((item) => (
-            <div key={item.id} className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition">
+            <div key={item.id} className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition relative group">
+              
+              {/* Movie Poster */}
               {item.poster_path ? (
                 <img
                   src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
@@ -85,9 +117,21 @@ const addToWatchlist = async (item) => {
                   No Image
                 </div>
               )}
+
+              {/* Eye icon to mark as watched */}
+              <div
+                onClick={() => addToWatched(item)}
+                className="absolute top-2 right-2 bg-purple-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-purple-600/90 shadow-lg"
+                title="Mark as watched"
+              >
+                <AiOutlineEye size={18} />
+              </div>
+
               <div className="p-3">
                 <h3 className="text-sm font-bold line-clamp-2">{item.title}</h3>
-                
+                <p className="text-xs text-gray-400 mt-1">Release: {item.release_date || 'N/A'}</p>
+
+                {/* Buttons */}
                 <div className="flex gap-2 mt-3">
                   <Link
                     to={`/details/${item.id}?type=${mediaType}`}
@@ -97,7 +141,7 @@ const addToWatchlist = async (item) => {
                   </Link>
                   <button
                     onClick={() => addToWatchlist(item)}
-                    className="cursor-pointer flex-1 bg-purple-700 text-white text-xs font-semibold py-1.5 rounded hover:bg-purple-600 transition"
+                    className="flex-1 bg-purple-700 text-white text-xs font-semibold py-1.5 rounded hover:bg-purple-600 transition"
                   >
                     + My List
                   </button>
