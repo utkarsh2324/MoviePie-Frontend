@@ -37,7 +37,7 @@ function App() {
               <TopLikedMedia />
               <TrendingPopularMedia />
               <TopBoxOffice/>
-   
+              <Footer/>
             </>
           }
         />
@@ -63,7 +63,7 @@ function App() {
 <Route path="/reset-password" element={<ResetPassword />} />
        
       </Routes>
-      <Footer/>
+     
     </>
   );
 }  
