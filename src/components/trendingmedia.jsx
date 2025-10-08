@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { AiOutlineEye } from 'react-icons/ai';
+import { useAuth } from './auth';
 
 const TrendingMedia = () => {
+  const { user, isLoading } = useAuth();
   const [mediaType, setMediaType] = useState('movie');
   const [media, setMedia] = useState([]);
   const [page, setPage] = useState(1);
@@ -156,10 +158,25 @@ const TrendingMedia = () => {
               {/* Eye icon */}
               <div
                 onClick={() => addToWatched(item)}
-                className="absolute top-2 right-2 bg-pink-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-pink-600/90 shadow-lg"
+                className="absolute top-2 right-10 bg-pink-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-pink-600/90 shadow-lg"
                 title="Mark as watched"
               >
                 <AiOutlineEye size={18} />
+              </div>
+              {/* ▶ Play Button */}
+              <div
+                onClick={() => {
+                  if (!user) {
+                    toast.error('Please login to watch!');
+                    navigate('/login');
+                  } else {
+                    navigate(`/watch/${item.id}?type=${mediaType}`);
+                  }
+                }}
+                className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
+                title="Watch Now"
+              >
+                <span className="text-pink-700 font-bold text-lg">▶</span>
               </div>
 
               <div className="p-3">

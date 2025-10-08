@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { AiOutlineEye } from 'react-icons/ai';
-
+import { useAuth } from './auth';
 const Watchlist = () => {
+  const {user,isLoading}=useAuth();
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const API=import.meta.env.VITE_BACKEND_URL;
@@ -112,7 +113,20 @@ const Watchlist = () => {
                   >
                     <AiOutlineEye size={18} />
                   </div>
-
+                  <div
+  onClick={() => {
+    if (!user) {
+      toast.error('Please login to watch!');
+      navigate('/login');
+    } else {
+      navigate(`/watch/${item.id}`);
+    }
+  }}
+  className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
+  title="Watch Now"
+>
+  <span className="text-purple-600 font-bold text-lg">▶</span>
+</div>
                   <div className="p-3">
                     <h3 className="text-sm font-bold line-clamp-2">{title}</h3>
                     <p className="text-xs text-gray-400 mt-1">

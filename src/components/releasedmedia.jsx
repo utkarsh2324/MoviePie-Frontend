@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import { useAuth } from './auth';
 const languageOptions = [
+ 
+
   { code: '', name: 'All Languages' },
   { code: 'hi', name: 'Hindi' },
   { code: 'en', name: 'English' },
@@ -13,6 +15,7 @@ const languageOptions = [
 ];
 
 const ReleasedMedia = () => {
+  const {user,isLoading}=useAuth;
   const [media, setMedia] = useState([]);
   const [type, setType] = useState('movie');
   const [language, setLanguage] = useState('');
@@ -160,7 +163,19 @@ const ReleasedMedia = () => {
                       No Image
                     </div>
                   )}
+                  
                   <div className="p-4 flex flex-col gap-2">
+                  <div
+  onClick={() => {
+    
+      navigate(`/watch/${item.id}?type=${type}`);
+    
+  }}
+className="absolute top-2 right-2 bg-white p-2 rounded-full cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
+  title="Watch Now"
+>
+  <span className="text-purple-600 font-bold text-lg">▶</span>
+</div>
                     <h3 className="text-sm font-bold line-clamp-2 text-white">{title}</h3>
                     <p className="text-xs text-gray-400">Release: {date}</p>
                     <div className="flex gap-2 mt-2">

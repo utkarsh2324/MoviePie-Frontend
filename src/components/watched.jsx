@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from './auth';
 
 const Watched = () => {
+  const {user,isLoading}=useAuth();
   const [watched, setWatched] = useState({ movies: [], series: [], totalMovies: 0, totalSeries: 0 });
   const [loading, setLoading] = useState(true);
   const API = import.meta.env.VITE_BACKEND_URL;

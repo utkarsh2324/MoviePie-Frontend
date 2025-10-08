@@ -126,7 +126,7 @@ const TopBoxOffice = () => {
   <AiOutlineEye size={18} />
 </div>
 
-{/* ▶ Watch Now */}
+
 {/* ▶ Play Button */}
 <div
   onClick={() => {
