@@ -5,6 +5,7 @@ import { Link ,useNavigate} from 'react-router-dom';
 const Watched = () => {
   const {user,isLoading}=useAuth();
   const navigate = useNavigate();
+  const [mediaType, setMediaType] = useState('movie');
   const [watched, setWatched] = useState({ movies: [], series: [], totalMovies: 0, totalSeries: 0 });
   const [loading, setLoading] = useState(true);
   const API = import.meta.env.VITE_BACKEND_URL;
