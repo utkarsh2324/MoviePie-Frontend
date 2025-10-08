@@ -108,7 +108,7 @@ const Watchlist = () => {
                   {/* ✅ Eye overlay icon */}
                   <div
                     onClick={() => handleAddToWatched(item)}
-                    className="absolute top-2 right-2 bg-purple-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-purple-600/90 shadow-lg"
+                    className="absolute top-2 right-10 bg-purple-700/80 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-purple-600/90 shadow-lg"
                     title="Mark as watched"
                   >
                     <AiOutlineEye size={18} />

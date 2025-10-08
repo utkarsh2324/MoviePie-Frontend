@@ -63,6 +63,20 @@ const Watched = () => {
                     {item.mediaType?.toUpperCase() || 'MEDIA'}
                   </span>
                 </div>
+                <div
+  onClick={() => {
+    if (!user) {
+      toast.error('Please login to watch!');
+      navigate('/login');
+    } else {
+      navigate(`/watch/${item.id}`);
+    }
+  }}
+  className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
+  title="Watch Now"
+>
+  <span className="text-purple-600 font-bold text-lg">▶</span>
+</div>
               </div>
             );
           })}
