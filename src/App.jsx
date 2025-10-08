@@ -22,6 +22,7 @@ import VerifyOTP from './components/verify-otp.jsx';
 import MovieBot from './components/moviebot.jsx';
 import Watched from './components/watched.jsx';
 import Footer from './components/footer.jsx';
+import MoviePlayer from './components/movieplayer.jsx';
 import './App.css';
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/watchlist" element={<Watchlist/>} />
         <Route path="/movie-bot" element={<MovieBot/>} />
         <Route path="/watched" element={<Watched/>} />
+        <Route path="/watch/:movieId" element={<MoviePlayer />} />
         
         
 

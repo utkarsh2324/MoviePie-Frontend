@@ -31,7 +31,7 @@ export default function Navbar() {
     { name: 'Watchlist', href: '/watchlist' },
     { name: 'CineQuery', href: '/movie-bot' },
     { name: 'Watched', href: '/watched' },
-  
+    { name:'MoviePlayer', href:'/player'}
   ];
 
   const handleProtectedRoute = (href, label) => {
