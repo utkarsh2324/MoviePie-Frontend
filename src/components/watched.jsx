@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from './auth';
-
+import { Link ,useNavigate} from 'react-router-dom';
 const Watched = () => {
   const {user,isLoading}=useAuth();
   const [watched, setWatched] = useState({ movies: [], series: [], totalMovies: 0, totalSeries: 0 });
