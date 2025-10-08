@@ -236,20 +236,20 @@ const BrowseAndBinge = () => {
               <AiOutlineEye size={18} />
             </div>
             <div
-  onClick={() => {
-    if (!user) {
-      toast.error('Please login to watch!');
-      navigate('/login');
-    } else {
-      // Use item.id for both movies and series
-      navigate(`/watch/${item.id}?type=${mediaType}&t=${Date.now()}`);
-    }
-  }}
-  className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
-  title="Watch Now"
->
-  <span className="text-purple-600 font-bold text-lg">▶</span>
-</div>
+              onClick={() => {
+                if (!user) {
+                  toast.error('Please login to watch!');
+                  navigate('/login');
+                } else {
+                  const url = `/watch/${item.id}?type=${mediaType}`;
+                  navigate(url);
+                }
+              }}
+              className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
+              title="Watch Now"
+            >
+              <span className="text-purple-600 font-bold text-lg">▶</span>
+            </div>
             <div className="p-4">
               <h3 className="text-sm font-bold line-clamp-2">{item.title || item.name}</h3>
               <p className="text-xs text-gray-400 mt-1">{item.release_date || item.first_air_date || 'Unknown Date'}</p>

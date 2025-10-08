@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from './auth';
-import { Link ,useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
 const Watched = () => {
-  const {user,isLoading}=useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [mediaType, setMediaType] = useState('movie');
   const [watched, setWatched] = useState({ movies: [], series: [], totalMovies: 0, totalSeries: 0 });
   const [loading, setLoading] = useState(true);
   const API = import.meta.env.VITE_BACKEND_URL;
@@ -16,14 +17,16 @@ const Watched = () => {
       setWatched(res.data.data || { movies: [], series: [], totalMovies: 0, totalSeries: 0 });
     } catch (err) {
       console.error('Failed to fetch watched list:', err);
+      toast.error('Failed to fetch watched list');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchWatched();
-  }, []);
+    if (!isLoading && !user) navigate('/login');
+    else fetchWatched();
+  }, [user, isLoading]);
 
   if (loading) {
     return <div className="text-white text-center py-10">Loading watched list...</div>;
@@ -42,8 +45,8 @@ const Watched = () => {
             const displayTitle = item.title || item.name;
             return (
               <div
-                key={item._id}
-                className="bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300"
+                key={item._id || item.movieId}
+                className="relative group bg-gray-900 rounded-lg overflow-hidden shadow hover:scale-105 transition duration-300"
               >
                 {item.posterPath ? (
                   <img
@@ -56,6 +59,7 @@ const Watched = () => {
                     No Image
                   </div>
                 )}
+
                 <div className="p-3">
                   <h3 className="text-sm font-bold line-clamp-2">{displayTitle}</h3>
                   <p className="text-xs text-gray-400 mt-1">
@@ -65,21 +69,24 @@ const Watched = () => {
                     {item.mediaType?.toUpperCase() || 'MEDIA'}
                   </span>
                 </div>
+
+                {/* Watch Now Button */}
                 <div
-  onClick={() => {
-    if (!user) {
-      toast.error('Please login to watch!');
-      navigate('/login');
-    } else {
-      // Append timestamp to force remount even if same movie
-      navigate(`/watch/${item.movieId}?type=${item.mediaType}&t=${Date.now()}`);
-    }
-  }}
-  className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
-  title="Watch Now"
->
-  <span className="text-purple-600 font-bold text-lg">▶</span>
-</div>
+                  onClick={() => {
+                    if (!user) {
+                      toast.error('Please login to watch!');
+                      navigate('/login');
+                    } else {
+                      navigate(
+                        `/watch/${item.movieId || item._id}?type=${item.mediaType}&t=${Date.now()}`
+                      );
+                    }
+                  }}
+                  className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition duration-300 hover:bg-gray-200 shadow-lg flex items-center justify-center"
+                  title="Watch Now"
+                >
+                  <span className="text-purple-600 font-bold text-lg">▶</span>
+                </div>
               </div>
             );
           })}
@@ -97,8 +104,8 @@ const Watched = () => {
           <p className="text-gray-400">You haven’t marked anything as watched yet.</p>
         ) : (
           <>
-            {renderSection('Movies', watched.movies, watched.totalMovies)}
-            {renderSection('Series', watched.series, watched.totalSeries)}
+            {renderSection('Movies', watched.movies || [], watched.totalMovies)}
+            {renderSection('Series', watched.series || [], watched.totalSeries)}
           </>
         )}
       </div>

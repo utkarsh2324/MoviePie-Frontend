@@ -1,26 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 export default function MoviePlayer() {
   const { movieId } = useParams();
   const location = useLocation();
-  
-  // Check if type is passed in query
+
   const queryParams = new URLSearchParams(location.search);
   const mediaType = queryParams.get("type") || "movie";
 
-  // Default for TV series
-  const season = 1;
-  const episode = 1;
+  // TV series controls
+  const [season, setSeason] = useState(1);
+  const [episode, setEpisode] = useState(1);
 
   const embedUrl =
     mediaType === "movie"
-      ? `https://www.vidking.net/embed/movie/${movieId}`
+      ? `https://www.vidking.net/embed/movie/${movieId}?autoPlay=true`
       : `https://www.vidking.net/embed/tv/${movieId}/${season}/${episode}?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center text-white">
-      <h1 className="text-2xl font-bold my-6">{mediaType === "movie" ? "Movie Player" : "TV Series Player"}</h1>
+    <div className="min-h-screen bg-black flex flex-col items-center text-white py-10 px-4">
+      <h1 className="text-2xl font-bold my-6">
+        {mediaType === "movie" ? "Movie Player" : "TV Series Player"}
+      </h1>
+
+      {mediaType === "tv" && (
+        <div className="flex gap-4 mb-4">
+          <input
+            type="number"
+            min={1}
+            value={season}
+            onChange={(e) => setSeason(e.target.value)}
+            placeholder="Season"
+            className="bg-gray-800 px-3 py-1 rounded w-24 text-white"
+          />
+          <input
+            type="number"
+            min={1}
+            value={episode}
+            onChange={(e) => setEpisode(e.target.value)}
+            placeholder="Episode"
+            className="bg-gray-800 px-3 py-1 rounded w-24 text-white"
+          />
+        </div>
+      )}
 
       <div className="w-full max-w-6xl px-4">
         <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
